@@ -7,12 +7,22 @@ import { Feedback } from './feedback.entity';
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService) {}
 
+  @Get()
+  async getFeedback() {
+
+   // console.log(`did you reach here ${JSON.stringify(feedbackData)}`);
+
+    return 'Ok';
+    
+  }
+
   @Post()
   async createFeedback(@Body() feedbackData: Partial<Feedback>) {
 
-    console.log(`did you reach here ${JSON.stringify(feedbackData)}`);
+   // console.log(`did you reach here ${JSON.stringify(feedbackData)}`);
 
     return this.feedbackService.create(feedbackData);
+    
   }
 
 

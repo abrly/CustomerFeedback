@@ -1,6 +1,6 @@
 .feedback-container {
   max-width: 800px;
-  margin: 3rem auto;
+  margin: 0rem auto;
   padding: 2.5rem;
   background: #fdfdfd;
   border-radius: 20px;
@@ -36,4 +36,43 @@ button {
   color: red;
   text-align: center;
   margin-top: 1.5rem;
+}
+
+.language-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:lightgray;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    gap: 0.5rem;
+
+    img {
+      width: 30px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    &:hover {
+      background-color: #0055aa;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
 }

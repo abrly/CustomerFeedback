@@ -1,7 +1,8 @@
 // src/app/services/feedback.service.ts
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Feedback {
   ContNo: string;
@@ -15,12 +16,23 @@ export interface Feedback {
 })
 export class FeedbackService {
 
-  private apiUrl = 'http://localhost:3000/feedback'; // Change if backend hosted elsewhere
+  private apiUrl = `${environment.apiUrl}/feedback`; 
+
 
   constructor(private http: HttpClient) {}
+ 
+    sendFeedback(data: any): Observable<any> {
+      const headers = new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('X-HTTP-Method-Override', 'POST'); 
+        
+      return this.http.post(
+        this.apiUrl, 
+        data,
+        { headers }
+      );
 
-  sendFeedback(feedback: Feedback): Observable<any> {
-    return this.http.post(this.apiUrl, feedback);
-  }
+
+    }
   
 }

@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FeedbackService } from './feedback.service';
 
@@ -10,6 +10,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 
+import { MatDividerModule } from '@angular/material/divider';
+
+import { TranslateService } from '@ngx-translate/core';
+
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   standalone: true,
   selector: 'app-feedback',
@@ -18,7 +24,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,    
     MatIconModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule,
+    TranslateModule,   // ✅ IMPORTANT
   ],
   providers: [FeedbackService], // ✅ This line is crucial
   templateUrl: './feedback.component.html',
@@ -26,20 +34,79 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class FeedbackComponent {
 
+  @ViewChild(FormGroupDirective) formDirective!: FormGroupDirective;
+
+  currentLang = 'ar';
+
   feedbackForm: FormGroup;
   successMsg = '';
   errorMsg = '';
 
-  constructor(private fb: FormBuilder, private feedbackService: FeedbackService) {
+  isArabic = true;
+
+  constructor(private fb: FormBuilder, private feedbackService: FeedbackService,private translate: TranslateService) {
+
+    
+    translate.addLangs(['en', 'ar']);
+
+    translate.setDefaultLang('ar');
+  
+   // const browserLang = translate.getBrowserLang() ?? 'ar';
+
+    const browserLang = 'ar';
+
+    translate.use(browserLang.match(/en|ar/) ? browserLang : 'ar');
+
+    //this.isArabic = this.translate.currentLang === 'ar';
+
+    this.isArabic = true;
+
+    document.documentElement.dir = this.isArabic ? 'rtl' : 'ltr';
+
+    console.log(`what is default lang ${document.documentElement.dir}`);
+
+    
     this.feedbackForm = this.fb.group({
       ContNo: ['', [Validators.required]],
-      Remarks: ['', [Validators.required, Validators.email]],
+      Remarks: ['', [Validators.email]],
       name: ['', [Validators.required]],
       serviceType: ['', Validators.required],
       feedbackType: ['', Validators.required],
       feedbackText: ['', [Validators.required]],
     });
+
+  
   }
+
+  toggleLanguage(): void {
+
+    this.currentLang = this.currentLang === 'en' ? 'ar' : 'en';
+    this.translate.use(this.currentLang);
+    this.isArabic = this.currentLang === 'ar';
+  
+    // Optional: Update <html> tag direction for the whole document
+    document.documentElement.dir = this.isArabic ? 'rtl' : 'ltr';
+
+    this.successMsg = '';
+    this.errorMsg = '';
+
+    this.feedbackForm.reset();
+    this.feedbackForm.markAsPristine();
+    this.feedbackForm.markAsUntouched();
+    this.feedbackForm.updateValueAndValidity(); 
+
+    Object.keys(this.feedbackForm.controls).forEach(key => {
+      this.feedbackForm.get(key)?.reset();
+      this.feedbackForm.get(key)?.markAsPristine();
+      this.feedbackForm.get(key)?.markAsUntouched();
+    });
+
+    this.formDirective.resetForm();
+
+
+
+  }
+  
 
   onSubmit() {
     console.log(`ht`);
@@ -47,18 +114,50 @@ export class FeedbackComponent {
     this.errorMsg = '';
 
     if (this.feedbackForm.invalid) {
-      this.errorMsg = 'Please fill in all required fields correctly.';
+
+
+      this.translate.get('FEEDBACK.FILL').subscribe((res: string) => {
+        this.errorMsg = res; // This will be localized based on the current language
+      });
+      
+      
+     // this.errorMsg = 'Please fill in all required fields correctly.';
+
+
       return;
     }
 
     this.feedbackService.sendFeedback(this.feedbackForm.value).subscribe({
       next: () => {
-        this.successMsg = 'Thank you! Your feedback has been submitted.';
+
+        this.translate.get('FEEDBACK.SUCCESS').subscribe((res: string) => {
+          this.successMsg = res; // This will be localized based on the current language
+        });
+
+       // this.successMsg = 'Thank you! Your feedback has been submitted.';
+
         this.feedbackForm.reset();
+        this.feedbackForm.markAsPristine();
+        this.feedbackForm.markAsUntouched();
+        this.feedbackForm.updateValueAndValidity(); 
+
+        Object.keys(this.feedbackForm.controls).forEach(key => {
+          this.feedbackForm.get(key)?.reset();
+          this.feedbackForm.get(key)?.markAsPristine();
+          this.feedbackForm.get(key)?.markAsUntouched();
+        });
+
+        this.formDirective.resetForm();
+
       },
       error: (err) => {
         console.error(err);
-        this.errorMsg = 'Submission failed. Please try again.';
+
+        this.translate.get('FEEDBACK.FAILURE').subscribe((res: string) => {
+          this.errorMsg = res; // This will be localized based on the current language
+        });
+
+        // this.errorMsg = 'Submission failed. Please try again.';
       },
     });
   }

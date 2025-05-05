@@ -10,14 +10,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #004080;
-    color: white;
+    background: white;
+    color: gray;
     padding: 1rem 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .header-logo {
-    height: 50px;
+    height: 60px;
   }
   
   .app-header h1 {

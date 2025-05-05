@@ -1,74 +1,90 @@
-<div class="feedback-container">
-  <h2>Customer Feedback</h2>
+<div class="feedback-container" [dir]="isArabic ? 'rtl' : 'ltr'">
 
-  <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" class="feedback-form">
+  <!-- Language Toggle Button -->
+  <div class="language-toggle">
+    <button type="button" (click)="toggleLanguage()" mat-icon-button>
+      <img
+        src="assets/img/AREN.png"
+        alt="lang"
+        width="30"
+        height="20"
+      />      
+    </button>
+  </div>
+
+  <h3>{{ 'CUSTOMERFEEDBACK' | translate }}</h3>
+
+  <!-- Feedback Form -->
+  <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" class="feedback-form" #formDirective="ngForm">
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Name</mat-label>
+      <mat-label>{{ 'NAME' | translate }}</mat-label>
       <mat-icon matPrefix>person</mat-icon>
-      <input matInput formControlName="name" placeholder="Enter your name" />
+      <input matInput formControlName="name" placeholder="{{ 'ENTER_NAME' | translate }}" maxlength="100" />
       <mat-error *ngIf="feedbackForm.get('name')?.invalid && feedbackForm.get('name')?.touched">
-        Name is required.
+        {{ 'NAME_REQUIRED' | translate }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Contact Number</mat-label>
+      <mat-label>{{ 'CONTACT_NUMBER' | translate }}</mat-label>
       <mat-icon matPrefix>call</mat-icon>
-      <input matInput formControlName="ContNo" placeholder="Enter your contact number" />
+      <input matInput formControlName="ContNo" placeholder="{{ 'ENTER_CONTACT_NUMBER' | translate }}" maxlength="50" />
       <mat-error *ngIf="feedbackForm.get('ContNo')?.invalid && feedbackForm.get('ContNo')?.touched">
-        Contact number is required.
+        {{ 'CONTACT_NUMBER_REQUIRED' | translate }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Email Address</mat-label>
+      <mat-label>{{ 'EMAIL_ADDRESS' | translate }}</mat-label>
       <mat-icon matPrefix>email</mat-icon>
-      <input matInput formControlName="Remarks" placeholder="Enter your email address" />
+      <input matInput formControlName="Remarks" placeholder="{{ 'ENTER_EMAIL_ADDRESS' | translate }}" maxlength="100" />
       <mat-error *ngIf="feedbackForm.get('Remarks')?.invalid && feedbackForm.get('Remarks')?.touched">
-        Valid email is required.
+        {{ 'EMAIL_REQUIRED' | translate }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Service Type</mat-label>
+      <mat-label>{{ 'SERVICE_TYPE' | translate }}</mat-label>
       <mat-select formControlName="serviceType">
-        <mat-option value="" disabled>Select Service Type</mat-option>
-        <mat-option value="Maintenance">Vehicle Maintenance</mat-option>
-        <mat-option value="Registration">Vehicle Registration & Licensing</mat-option>
-        <mat-option value="Insurance">Vehicle Insurance</mat-option>
-        <mat-option value="Others">Others</mat-option>
+        <mat-option value="" disabled>{{ 'SELECT_SERVICE_TYPE' | translate }}</mat-option>
+        <mat-option value="Maintenance">{{ 'MAINTENANCE' | translate }}</mat-option>
+        <mat-option value="Registration">{{ 'REGISTRATION' | translate }}</mat-option>
+        <mat-option value="Insurance">{{ 'INSURANCE' | translate }}</mat-option>
+        <mat-option value="Others">{{ 'OTHERS' | translate }}</mat-option>
       </mat-select>
       <mat-error *ngIf="feedbackForm.get('serviceType')?.invalid && feedbackForm.get('serviceType')?.touched">
-        Service type is required.
+        {{ 'SERVICE_REQUIRED' | translate }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Feedback Type</mat-label>
+      <mat-label>{{ 'FEEDBACK_TYPE' | translate }}</mat-label>
       <mat-select formControlName="feedbackType">
-        <mat-option value="" disabled>Select Feedback Type</mat-option>
-        <mat-option value="Complaint">Complaint</mat-option>
-        <mat-option value="Suggestion">Suggestion</mat-option>
-        <mat-option value="Note">Note</mat-option>
-        <mat-option value="AfterService">After Service Feedback</mat-option>
-        <mat-option value="Other">Other</mat-option>
+        <mat-option value="" disabled>{{ 'SELECT_FEEDBACK_TYPE' | translate }}</mat-option>
+        <mat-option value="Complaint">{{ 'COMPLAINT' | translate }}</mat-option>
+        <mat-option value="Suggestion">{{ 'SUGGESTION' | translate }}</mat-option>
+        <mat-option value="Note">{{ 'NOTE' | translate }}</mat-option>
+        <mat-option value="AfterService">{{ 'AFTER_SERVICE_FEEDBACK' | translate }}</mat-option>
+        <mat-option value="Other">{{ 'OTHER' | translate }}</mat-option>
       </mat-select>
       <mat-error *ngIf="feedbackForm.get('feedbackType')?.invalid && feedbackForm.get('feedbackType')?.touched">
-        Feedback type is required.
+        {{ 'FEEDBACK_TYPE_REQUIRED' | translate }}
       </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Your Feedback</mat-label>
+      <mat-label>{{ 'YOUR_FEEDBACK' | translate }}</mat-label>
       <mat-icon matPrefix>feedback</mat-icon>
-      <textarea matInput formControlName="feedbackText" rows="4" placeholder="Enter your feedback here"></textarea>
+      <textarea matInput formControlName="feedbackText" rows="4" placeholder="{{ 'ENTER_FEEDBACK' | translate }}" maxlength="300"></textarea>
       <mat-error *ngIf="feedbackForm.get('feedbackText')?.invalid && feedbackForm.get('feedbackText')?.touched">
-        Feedback is required.
+        {{ 'MESSAGE_REQUIRED' | translate }}
       </mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" [disabled]="feedbackForm.invalid">Submit</button>
+    <button type="submit" mat-raised-button color="primary" [disabled]="feedbackForm.invalid">
+      {{ 'SUBMIT' | translate }}
+    </button>
 
   </form>
 

@@ -6,6 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Feedback } from './feedback/feedback.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FeedbackModule } from './feedback/feedback.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { join } from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -30,6 +33,36 @@ import { FeedbackModule } from './feedback/feedback.module';
       }),
     }),
     FeedbackModule,
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+
+        const templatePath = join(__dirname,'..','templates');
+        console.log('📁 Email template path:', templatePath);
+
+        return {
+          transport: {
+            host: configService.get<string>('EMAIL_SERVER'),
+            port: configService.get<number>('EMAIL_SERVER_PORT'),
+            auth: {
+              user: configService.get<string>('MAIL_USER'),
+              pass: configService.get<string>('MAIL_PASS'),
+            },
+          },
+          defaults: {
+            from: `"Feedback System" <${configService.get<string>('SENDER_EMAIL_ADDRESS')}>`,
+          },
+          template: {
+            dir: templatePath,
+            adapter: new HandlebarsAdapter(),
+            options: {
+              strict: true,
+            },
+          },
+        };
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, ConfigService],

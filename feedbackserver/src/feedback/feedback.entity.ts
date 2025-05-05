@@ -24,9 +24,17 @@ export class Feedback {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
+  @Column({ type: 'text', name: 'coulmn1' })
+  serviceType: string; 
+
+  @Column({ type: 'text', name: 'column2' })
+  feedbackType: string; 
+
   @Column({ type: 'text', name: 'coulmn3' })
   feedbackText: string; // Actual Feedback
 
   @Column({ type: 'varchar', length: 100 })
   CommunicationChannel: string; // Custom App
+
+
 }
